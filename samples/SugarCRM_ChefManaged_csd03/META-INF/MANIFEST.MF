@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+CSAR-Version: 1.0
+Service-Template: service-template/SugarCRM-ServiceTemplate.xml
+Display-Name: SugarCRM
+Vendor: example

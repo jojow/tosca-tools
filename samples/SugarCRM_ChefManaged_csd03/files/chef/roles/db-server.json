@@ -1,0 +1,9 @@
+{
+  "name": "db-server",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "description": "The base role for systems that serve a SQL database",
+  "run_list": [
+    "recipe[mysql::server]"
+  ]
+}

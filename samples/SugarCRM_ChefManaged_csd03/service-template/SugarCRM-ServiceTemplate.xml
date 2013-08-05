@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceTemplate id="SugarCRM" name="SugarCRM Service Template"
+  targetNamespace="http://www.example.com/servicetemplates/SugarCRM"
+  xmlns="http://docs.oasis-open.org/tosca/ns/2011/12"
+  xmlns:ns1="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties"
+  xmlns:ns10="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/PhpModuleProperties"
+  xmlns:ns11="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/PhpModuleHostedOnApacheProperties"
+  xmlns:ns12="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmGenericHostedOnProperties"
+  xmlns:ns13="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbHostedOnMySqlProperties"
+  xmlns:ns14="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmAppDependsOnPhpModuleProperties"
+  xmlns:ns15="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbConnectionProperties"
+  xmlns:ns2="http://www.example.com/ToscaComponents/SugarCrmTypes"
+  xmlns:ns3="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes"
+  xmlns:ns4="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/ApacheWebServerProperties"
+  xmlns:ns5="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties"
+  xmlns:ns6="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties"
+  xmlns:ns7="http://docs.oasis-open.org/tosca/ns/2011/12/types/OperatingSystemProperties"
+  xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns:ns9="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/MySqlProperties">
+  <Import importType="http://www.w3.org/2001/XMLSchema" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/ImplementationArtifacts"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/DeploymentArtifacts"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema" namespace="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/VirtualMachineProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/OperatingSystemProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/types/OperatingSystemProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/ApacheWebServerProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/ApacheWebServerProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/MySqlProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/MySqlProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/PhpModuleProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/PhpModuleProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmApplicationProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmDbProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/PhpModuleHostedOnApacheProperties.xsd" namespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/PhpModuleHostedOnApacheProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmGenericHostedOnProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmGenericHostedOnProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmDbHostedOnMySqlProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbHostedOnMySqlProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmAppDependsOnPhpModuleProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmAppDependsOnPhpModuleProperties"/>
+  <Import importType="http://www.w3.org/2001/XMLSchema"
+    location="../types/SugarCrmDbConnectionProperties.xsd" namespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbConnectionProperties"/>
+  <TopologyTemplate id="SugarCrmTopologyTemplate" name="SugarCRM Topology Template">
+    <NodeTemplate id="VmApache" name="VM for Apache" nodeType="VirtualMachineType">
+      <PropertyDefaults>
+        <ns1:VirtualMachineProperties
+          xmlns:ns1="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties" xmlns="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties">
+          <NumCpus>1</NumCpus>
+        </ns1:VirtualMachineProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <NodeTemplate id="OsApache" name="OS for Apache" nodeType="OperatingSystemType"/>
+    <RelationshipTemplate id="OsApache_HostedOn_VmApache"
+      name="hosted on" relationshipType="ns2:SugarCrmGenericHostedOnType">
+      <SourceElement id="OsApache"/>
+      <TargetElement id="VmApache"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="ApacheWebServer" name="Apache Web Server" nodeType="ns3:ApacheWebServerType">
+      <PropertyDefaults>
+        <ns4:ApacheWebServerProperties
+          xmlns:ns4="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/ApacheWebServerProperties" xmlns="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/ApacheWebServerProperties">
+          <httpdport>80</httpdport>
+        </ns4:ApacheWebServerProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <RelationshipTemplate id="Apache_HostedOn_OsApache" name="hosted on" relationshipType="ns2:SugarCrmGenericHostedOnType">
+      <SourceElement id="ApacheWebServer"/>
+      <TargetElement id="OsApache"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="SugarCrmApp" name="SugarCRM App" nodeType="ns2:SugarCrmApplicationType">
+      <PropertyDefaults>
+        <ns5:SugarCrmApplicationProperties
+          xmlns:ns5="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties">
+          <SugarCRMKey>dummy</SugarCRMKey>
+          <AdminUser>admin</AdminUser>
+          <AdminPassword>admin</AdminPassword>
+          <DemoData>false</DemoData>
+          <DBexists>false</DBexists>
+        </ns5:SugarCrmApplicationProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <RelationshipTemplate id="SugarCrmApp_HostedOn_Apache"
+      name="hosted on" relationshipType="ns2:SugarCrmGenericHostedOnType">
+      <SourceElement id="SugarCrmApp"/>
+      <TargetElement id="ApacheWebServer"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="PhpModule" name="PHP Module" nodeType="ns3:PhpModuleType"/>
+    <RelationshipTemplate id="PhpModule_HostedOn_Apache"
+      name="hosted on" relationshipType="ns3:PhpModuleHostedOnApacheType">
+      <SourceElement id="PhpModule"/>
+      <TargetElement id="ApacheWebServer"/>
+    </RelationshipTemplate>
+    <RelationshipTemplate id="SugarCrmApp_DependsOn_PhpModule"
+      name="depends on" relationshipType="ns2:SugarCrmAppDependsOnPhpModuleType">
+      <SourceElement id="SugarCrmApp"/>
+      <TargetElement id="PhpModule"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="VmMySql" name="VM for MySQL" nodeType="VirtualMachineType">
+      <PropertyDefaults>
+        <ns1:VirtualMachineProperties
+          xmlns:ns1="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties" xmlns="http://docs.oasis-open.org/tosca/ns/2011/12/types/VirtualMachineProperties">
+          <NumCpus>1</NumCpus>
+        </ns1:VirtualMachineProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <NodeTemplate id="OsMySql" name="OS for MySQL" nodeType="OperatingSystemType"/>
+    <RelationshipTemplate id="OsMySql_HostedOn_VmMySql" name="hosted on" relationshipType="ns2:SugarCrmGenericHostedOnType">
+      <SourceElement id="OsMySql"/>
+      <TargetElement id="VmMySql"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="MySql" name="MySQL" nodeType="ns3:MySqlType">
+      <PropertyDefaults>
+        <ns6:SugarCrmDbProperties
+          xmlns:ns6="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties">
+          <RootPassword>password</RootPassword>
+        </ns6:SugarCrmDbProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <RelationshipTemplate id="MySql_HostedOn_OsMySql" name="hosted on" relationshipType="ns2:SugarCrmGenericHostedOnType">
+      <SourceElement id="MySql"/>
+      <TargetElement id="OsMySql"/>
+    </RelationshipTemplate>
+    <NodeTemplate id="SugarCrmDb" name="SugarCRM DB" nodeType="ns2:SugarCrmDbType">
+      <PropertyDefaults>
+        <ns6:SugarCrmDbProperties
+          xmlns:ns6="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties">
+          <DBName>sugardb</DBName>
+          <DBUser>sugaradmin</DBUser>
+          <DBPassword>sugaradmin</DBPassword>
+          <mySqlPort>3306</mySqlPort>
+        </ns6:SugarCrmDbProperties>
+      </PropertyDefaults>
+    </NodeTemplate>
+    <RelationshipTemplate id="SugarCrmDb_HostedOn_MySql"
+      name="hosted on" relationshipType="ns2:SugarCrmDbHostedOnMySqlType">
+      <SourceElement id="SugarCrmDb"/>
+      <TargetElement id="MySql"/>
+    </RelationshipTemplate>
+    <RelationshipTemplate id="SugarCrmApp_ConnectsTo_SugarCrmDb"
+      name="connects to" relationshipType="ns2:SugarCrmDbConnectionType">
+      <SourceElement id="SugarCrmApp"/>
+      <TargetElement id="SugarCrmDb"/>
+    </RelationshipTemplate>
+  </TopologyTemplate>
+  <NodeTypes>
+    <NodeType id="VirtualMachineType" name="Virtual Machine" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12">
+      <NodeTypeProperties element="ns1:VirtualMachineProperties"/>
+    </NodeType>
+    <NodeType id="OperatingSystemType" name="Operating System" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12">
+      <NodeTypeProperties element="ns7:OperatingSystemProperties"/>
+    </NodeType>
+    <NodeType id="ApacheWebServerType" name="Apache Web Server" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes">
+      <NodeTypeProperties element="ns4:ApacheWebServerProperties"/>
+      <Interfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/interfaces/lifecycle">
+          <Operation name="configure">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="start">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="stop">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="uninstall">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="install">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="configure" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="start" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="stop" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="uninstall" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="install" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/apache2.zip" name="apache2"/>
+                </Cookbooks>
+                <Roles>
+                  <Role name="web-server" roleDefLocation="files/chef/roles/web-server.json"/>
+                </Roles>
+                <RunList>
+                  <Include>
+                    <RunListEntry roleName="web-server"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </Interfaces>
+    </NodeType>
+    <NodeType id="MySqlType" name="MySQL" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes">
+      <NodeTypeProperties element="ns9:MySqlProperties"/>
+      <Interfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/interfaces/lifecycle">
+          <Operation name="configure">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="start">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="stop">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="uninstall">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="install">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="configure" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="start" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="stop" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="uninstall" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="install" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/build-essential.zip" name="build-essential"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/openssl.zip" name="openssl"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/mysql.zip" name="mysql"/>
+                </Cookbooks>
+                <Roles>
+                  <Role name="db-server" roleDefLocation="files/chef/roles/db-server.json"/>
+                </Roles>
+                <Mappings>
+                  <PropertyMapping
+                    cookbookAttribute="mysql/server_root_password"
+                    mode="input" propertyPath="/RootPassword"/>
+                </Mappings>
+                <RunList>
+                  <Include>
+                    <RunListEntry roleName="db-server"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </Interfaces>
+    </NodeType>
+    <NodeType id="PhpModuleType" name="PHP Module" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes">
+      <NodeTypeProperties element="ns10:PhpModuleProperties"/>
+      <Interfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/interfaces/lifecycle">
+          <Operation name="configure">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="start">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="stop">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="uninstall">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="install">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="configure" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="start" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="stop" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="uninstall" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="install" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/build-essential.zip" name="build-essential"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/xml.zip" name="xml"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/openssl.zip" name="openssl"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/mysql.zip" name="mysql"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/php.zip" name="php"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="php" recipeName="package"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </Interfaces>
+    </NodeType>
+    <NodeType id="SugarCrmApplicationType" name="SugarCRM Application" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <NodeTypeProperties element="ns5:SugarCrmApplicationProperties"/>
+      <Interfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/interfaces/lifecycle">
+          <Operation name="configure">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="start">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="stop">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="uninstall">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="install">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="configure" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="start" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="stop" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="uninstall" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="install" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/sugarcrm.zip" name="sugarcrm"/>
+                </Cookbooks>
+                <Mappings>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/license_key"
+                    mode="input" propertyPath="/SugarCRMKey"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/site_admin_username"
+                    mode="input" propertyPath="/AdminUser"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/site_admin_password"
+                    mode="input" propertyPath="/AdminPassword"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/insert_demo_data"
+                    mode="input" propertyPath="/DemoData"/>
+                </Mappings>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="sugarcrm" recipeName="app"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </Interfaces>
+    </NodeType>
+    <NodeType id="SugarCrmDbType" name="SugarCRM DB" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <NodeTypeProperties element="ns6:SugarCrmDbProperties"/>
+      <Interfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/interfaces/lifecycle">
+          <Operation name="install">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="configure">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="start">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="stop">
+            <ScriptOperation/>
+          </Operation>
+          <Operation name="uninstall">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="install" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="configure" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="start" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="stop" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+            <ImplementationArtifact operationName="uninstall" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/helper.zip" name="helper"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="helper" recipeName="no_op"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </Interfaces>
+    </NodeType>
+  </NodeTypes>
+  <RelationshipTypes>
+    <RelationshipType id="HostedOnType" name="Hosted on" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12"/>
+    <RelationshipType id="DependsOnType" name="Depends on" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12"/>
+    <RelationshipType id="ConnectsToType" name="Connects to" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12"/>
+    <RelationshipType id="PhpModuleHostedOnApacheType" name="Hosted on" targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes">
+      <RelationshipTypeProperties element="ns11:PhpModuleHostedOnApacheProperties"/>
+      <DerivedFrom relationshipTypeRef="HostedOnType"/>
+      <SourceInterfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/HostedOnType">
+          <Operation name="hostOn">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="hostOn" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/apache2.zip" name="apache2"/>
+                </Cookbooks>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="apache2" recipeName="mod_php5"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </SourceInterfaces>
+      <ValidSources>
+        <Source type="ns3:PhpModuleType"/>
+      </ValidSources>
+      <ValidTargets>
+        <Target type="ns3:ApacheWebServerType"/>
+      </ValidTargets>
+    </RelationshipType>
+    <RelationshipType id="SugarCrmGenericHostedOnType" name="Hosted on" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <RelationshipTypeProperties element="ns12:SugarCrmGenericHostedOnProperties"/>
+      <DerivedFrom relationshipTypeRef="HostedOnType"/>
+      <ValidSources>
+        <Source type="OperatingSystemType"/>
+        <Source type="ns3:ApacheWebServerType"/>
+        <Source type="ns3:MySqlType"/>
+        <Source type="ns3:PhpModuleType"/>
+        <Source type="ns2:SugarCrmApplicationType"/>
+        <Source type="ns2:SugarCrmDbType"/>
+      </ValidSources>
+      <ValidTargets>
+        <Target type="VirtualMachineType"/>
+        <Target type="OperatingSystemType"/>
+        <Target type="ns3:ApacheWebServerType"/>
+        <Target type="ns3:MySqlType"/>
+      </ValidTargets>
+    </RelationshipType>
+    <RelationshipType id="SugarCrmDbHostedOnMySqlType" name="Hosted on" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <RelationshipTypeProperties element="ns13:SugarCrmDbHostedOnMySqlProperties"/>
+      <DerivedFrom relationshipTypeRef="HostedOnType"/>
+      <SourceInterfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/HostedOnType">
+          <Operation name="hostOn">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="hostOn" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/sugarcrm.zip" name="sugarcrm"/>
+                </Cookbooks>
+                <Mappings>
+                  <PropertyMapping
+                    cookbookAttribute="mysql/server_root_password"
+                    mode="input" propertyPath="/RootPassword"/>
+                  <PropertyMapping cookbookAttribute="sugarcrm/db_name"
+                    mode="input" propertyPath="/DBName"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/db_username"
+                    mode="input" propertyPath="/DBUser"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/db_password"
+                    mode="input" propertyPath="/DBPassword"/>
+                </Mappings>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="sugarcrm" recipeName="db"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </SourceInterfaces>
+      <ValidSources>
+        <Source type="ns2:SugarCrmDbType"/>
+      </ValidSources>
+      <ValidTargets>
+        <Target type="ns3:MySqlType"/>
+      </ValidTargets>
+    </RelationshipType>
+    <RelationshipType id="SugarCrmAppDependsOnPhpModuleType"
+      name="Depends on" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <RelationshipTypeProperties element="ns14:SugarCrmAppDependsOnPhpModuleProperties"/>
+      <DerivedFrom relationshipTypeRef="DependsOnType"/>
+      <ValidSources>
+        <Source type="ns2:SugarCrmApplicationType"/>
+      </ValidSources>
+      <ValidTargets>
+        <Target type="ns3:PhpModuleType"/>
+      </ValidTargets>
+    </RelationshipType>
+    <RelationshipType id="SugarCrmDbConnectionType" name="Connects to" targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes">
+      <RelationshipTypeProperties element="ns15:SugarCrmDbConnectionProperties"/>
+      <DerivedFrom relationshipTypeRef="ConnectsToType"/>
+      <SourceInterfaces>
+        <Interface name="http://docs.oasis-open.org/tosca/ns/2011/12/ConnectsToType">
+          <Operation name="connectTo">
+            <ScriptOperation/>
+          </Operation>
+          <ImplementationArtifacts>
+            <ImplementationArtifact operationName="connectTo" type="http://docs.oasis-open.org/tosca/ns/2012/07/ChefArtifact">
+              <ns8:ChefArtifact
+                xmlns:ns8="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts" xmlns="http://docs.oasis-open.org/tosca/ns/2012/07/ChefImplementationArtifacts">
+                <Cookbooks>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/mysql.zip" name="mysql"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/php.zip" name="php"/>
+                  <Cookbook
+                    cookbookLocation="files/chef/cookbooks/sugarcrm.zip" name="sugarcrm"/>
+                </Cookbooks>
+                <Mappings>
+                  <PropertyMapping cookbookAttribute="sugarcrm/db_host"
+                    mode="input" propertyPath="/VmMySql"/>
+                  <PropertyMapping cookbookAttribute="sugarcrm/db_name"
+                    mode="input" propertyPath="/DBName"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/db_username"
+                    mode="input" propertyPath="/DBUser"/>
+                  <PropertyMapping
+                    cookbookAttribute="sugarcrm/db_password"
+                    mode="input" propertyPath="/DBPassword"/>
+                </Mappings>
+                <RunList>
+                  <Include>
+                    <RunListEntry cookbookName="php" recipeName="module_mysql"/>
+                    <RunListEntry cookbookName="sugarcrm" recipeName="connect_app_to_db"/>
+                    <RunListEntry cookbookName="sugarcrm" recipeName="run_silent_install"/>
+                  </Include>
+                </RunList>
+              </ns8:ChefArtifact>
+              <RequiredContainerCapabilities>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefClientFeature"/>
+                <RequiredContainerCapability capability="http://docs.oasis-open.org/tosca/ns/2012/07/ChefServerFeature"/>
+              </RequiredContainerCapabilities>
+            </ImplementationArtifact>
+          </ImplementationArtifacts>
+        </Interface>
+      </SourceInterfaces>
+      <ValidSources>
+        <Source type="ns2:SugarCrmApplicationType"/>
+      </ValidSources>
+      <ValidTargets>
+        <Target type="ns2:SugarCrmDbType"/>
+      </ValidTargets>
+    </RelationshipType>
+  </RelationshipTypes>
+</ServiceTemplate>

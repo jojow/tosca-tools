@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmApplicationProperties">
+  <xs:complexType name="tSugarCrmApplicationProperties">
+    <xs:sequence>
+      <xs:element name="SugarCRMKey" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">SugarCRM License Key</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="admin" name="AdminUser" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Administrator</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="admin" name="AdminPassword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Administrator Password</xs:documentation>
+          <xs:appinfo>displayType=password</xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="false" name="DemoData" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Install Demo Data:</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="false" name="DBexists" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Database exists already:</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SugarCrmApplicationProperties" type="tSugarCrmApplicationProperties"/>
+</xs:schema>

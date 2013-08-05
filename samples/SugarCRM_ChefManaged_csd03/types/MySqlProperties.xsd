@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/MySqlProperties" xmlns="http://docs.oasis-open.org/tosca/ns/2011/12/ToscaCoreTypes/types/MySqlProperties">
+  <xs:complexType name="tMySqlProperties">
+    <xs:sequence>
+      <xs:element name="RootPassword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Root Password</xs:documentation>
+          <xs:appinfo>displayType=password</xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MySqlProperties" type="tMySqlProperties"/>
+</xs:schema>

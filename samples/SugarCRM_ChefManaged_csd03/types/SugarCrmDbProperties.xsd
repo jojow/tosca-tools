@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbProperties">
+  <xs:complexType name="tSugarCrmDbProperties">
+    <xs:sequence>
+      <xs:element default="sugarcrm" name="DBName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Database Name</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="sugarcrm" name="DBUser" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Database User</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="sugarcrm" name="DBPassword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">Database User Password</xs:documentation>
+          <xs:appinfo>displayType=password</xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element default="3306" name="mySqlPort" type="xs:int">
+        <xs:annotation>
+          <xs:documentation xml:lang="en">MySQL Port (default 3306)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SugarCrmDbProperties" type="tSugarCrmDbProperties"/>
+</xs:schema>

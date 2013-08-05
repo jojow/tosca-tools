@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbHostedOnMySqlProperties" xmlns="http://www.example.com/ToscaComponents/SugarCrmTypes/types/SugarCrmDbHostedOnMySqlProperties">
+  <xs:complexType name="tSugarCrmDbHostedOnMySqlProperties"/>
+  <xs:element name="SugarCrmDbHostedOnMySqlProperties" type="tSugarCrmDbHostedOnMySqlProperties"/>
+</xs:schema>
